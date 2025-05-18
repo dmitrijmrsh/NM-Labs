@@ -99,10 +99,10 @@ public class Spline {
         d = new ArrayList<>();
 
         for (int i = 1; i < size - 1; ++i) {
-            d.add((c.get(i) - c.get(i - 1)) / 3 * h.get(i));
+            d.add((c.get(i) - c.get(i - 1)) / (3. * h.get(i)));
         }
 
-        d.add(-c.get(size - 2) / (3 * h.get(size - 1)));
+        d.add(-c.get(size - 2) / (3. * h.get(size - 1)));
     }
 
     public double value(final double arg) {
