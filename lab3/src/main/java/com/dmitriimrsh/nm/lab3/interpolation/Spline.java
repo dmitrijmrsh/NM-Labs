@@ -1,10 +1,14 @@
 package com.dmitriimrsh.nm.lab3.interpolation;
 
+import com.dmitriimrsh.nm.lab3.util.Util;
 import com.dmitriimrsh.nm.lu.LUSolver;
 import org.apache.commons.math3.analysis.differentiation.DerivativeStructure;
+import org.knowm.xchart.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Spline {
 
@@ -24,6 +28,14 @@ public class Spline {
                   final List<Double> y) {
         this.x = x;
         this.y = y;
+
+        if (x.isEmpty()) {
+            throw new RuntimeException("Набор узлов не может быть пустым");
+        }
+
+        if (x.size() == 1) {
+            throw new RuntimeException("В непустом наборе узлов их кол-во должно быть 2 и более");
+        }
 
         if (x.size() != y.size()) {
             throw new RuntimeException("Некорректные размерности");
@@ -111,7 +123,7 @@ public class Spline {
                 return polynomial(i, arg).getValue();
             }
         }
-        throw new RuntimeException("Аргумент не входит в область определения функции");
+        throw new RuntimeException("Аргумент не входит в область определения интерполяции");
     }
 
     private DerivativeStructure polynomial(final int index,
@@ -125,17 +137,6 @@ public class Spline {
     }
 
     public boolean check() {
-        /*
-           Краевые случаи
-        */
-        if (x.isEmpty()) {
-            return true;
-        }
-
-        if (x.size() == 1) {
-            throw new RuntimeException("В непустом наборе узлов их кол-во должно быть 2 и более");
-        }
-
         /*
            Левый и правый крайние узлы
         */
@@ -196,6 +197,29 @@ public class Spline {
         }
 
         return !(Math.abs(polynomial(x.size() - 2, x.get(x.size() - 1)).getPartialDerivative(2)) >= eps);
+    }
+
+    public void visualize() {
+        final int num = 1000;
+        final double[] xData = Util.linspace(x.get(0), x.get(x.size() - 1), num);
+
+        double[] yData = new double[num];
+        for (int i = 0; i < num; ++i){
+            yData[i] = value(xData[i]);
+        }
+
+        XYChart chart = QuickChart.getChart(
+                "Интерполяция кубическим сплайном",
+                "X",
+                "Y",
+                "y(x)",
+                xData,
+                yData
+        );
+
+        chart.getStyler().setXAxisDecimalPattern("#0.0");
+
+        new SwingWrapper<>(chart).displayChart();
     }
 
     public List<Double> getC() {

@@ -51,6 +51,8 @@ public class Main {
             System.out.printf("Значение многочлена в X*: %.5f\n", lagrangeSolver.value(Util.Lagrange.X_star));
             System.out.printf("Значение функции в X*: %.5f\n", Util.Lagrange.y.apply(Util.Lagrange.X_star));
             System.out.printf("Абсолютная погрешность: %.5f\n", lagrangeSolver.absError(Util.Lagrange.X_star));
+
+            lagrangeSolver.visualize();
         } catch (RuntimeException ex) {
             System.out.printf("Ошибка: %s", ex.getMessage());
         }
@@ -72,6 +74,8 @@ public class Main {
             System.out.printf("Значение многочлена в X*: %.5f\n", newtonSolver.value(Util.Newton.X_star));
             System.out.printf("Значение функции в X*: %.5f\n", Util.Newton.y.apply(Util.Newton.X_star));
             System.out.printf("Абсолютная погрешность: %.5f\n", newtonSolver.absError(Util.Newton.X_star));
+
+            newtonSolver.visualize();
         } catch (RuntimeException ex) {
             System.out.printf("Ошибка: %s", ex.getMessage());
         }
@@ -110,7 +114,7 @@ public class Main {
         if (spline.check()) {
             System.out.println("Проверка выполнена успешно");
         } else {
-            throw new RuntimeException();
+            throw new RuntimeException("Проверка не пройдена");
         }
 
         System.out.printf(
@@ -118,6 +122,8 @@ public class Main {
                 Util.Spline.X_star,
                 spline.value(Util.Spline.X_star)
         );
+
+        spline.visualize();
     }
 
 }

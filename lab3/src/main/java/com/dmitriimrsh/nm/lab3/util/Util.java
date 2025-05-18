@@ -5,6 +5,17 @@ import java.util.function.Function;
 
 public class Util {
 
+    public static double[] linspace(final double start,
+                                    final double end,
+                                    final int num) {
+        double[] arr = new double[num];
+        double step = (end - start) / (num - 1);
+        for(int i = 0; i < num; i++) {
+            arr[i] = start + i * step;
+        }
+        return arr;
+    }
+
     public static class Anna {
 
         public static final List<Double> X = List.of(-1., 0., 3., 4.);

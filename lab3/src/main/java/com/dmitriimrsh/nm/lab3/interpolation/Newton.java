@@ -1,5 +1,10 @@
 package com.dmitriimrsh.nm.lab3.interpolation;
 
+import com.dmitriimrsh.nm.lab3.util.Util;
+import org.knowm.xchart.QuickChart;
+import org.knowm.xchart.SwingWrapper;
+import org.knowm.xchart.XYChart;
+
 import java.util.List;
 import java.util.function.Function;
 
@@ -111,5 +116,29 @@ public class Newton extends Solver {
             }
         }
         System.out.print("\n");
+    }
+
+    @Override
+    public void visualize() {
+        final int num = 1000;
+        final double[] xData = Util.linspace(x.get(0), x.get(x.size() - 1), num);
+
+        double[] yData = new double[num];
+        for (int i = 0; i < num; ++i){
+            yData[i] = value(xData[i]);
+        }
+
+        XYChart chart = QuickChart.getChart(
+                "Интерполяция методом Ньютона",
+                "X",
+                "Y",
+                "y(x)",
+                xData,
+                yData
+        );
+
+        chart.getStyler().setXAxisDecimalPattern("#0.0");
+
+        new SwingWrapper<>(chart).displayChart();
     }
 }

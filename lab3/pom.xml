@@ -23,6 +23,11 @@
             <artifactId>lab1</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>org.knowm.xchart</groupId>
+            <artifactId>xchart</artifactId>
+            <version>${knowm.xchart.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

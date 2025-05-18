@@ -38,4 +38,6 @@ public abstract class Solver {
 
     abstract public void print();
 
+    abstract public void visualize();
+
 }
