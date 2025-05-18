@@ -4,11 +4,12 @@ import com.dmitriimrsh.nm.lab3.util.Util;
 import com.dmitriimrsh.nm.lu.LUSolver;
 import org.apache.commons.math3.analysis.differentiation.DerivativeStructure;
 import org.knowm.xchart.*;
+import org.knowm.xchart.style.lines.SeriesLines;
+import org.knowm.xchart.style.markers.SeriesMarkers;
 
+import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Spline {
 
@@ -204,18 +205,29 @@ public class Spline {
         final double[] xData = Util.linspace(x.get(0), x.get(x.size() - 1), num);
 
         double[] yData = new double[num];
-        for (int i = 0; i < num; ++i){
+        for (int i = 0; i < num; ++i) {
             yData[i] = value(xData[i]);
         }
 
-        XYChart chart = QuickChart.getChart(
-                "Интерполяция кубическим сплайном",
-                "X",
-                "Y",
-                "y(x)",
-                xData,
-                yData
-        );
+        XYChart chart = new XYChartBuilder()
+                .title("Интерполяция кубическим сплайном")
+                .xAxisTitle("X")
+                .yAxisTitle("Y")
+                .width(800)
+                .height(600)
+                .build();
+
+        XYSeries splineSeries = chart.addSeries("y(x)", xData, yData);
+        splineSeries.setLineColor(Color.BLUE);
+
+        double[] nodeX = x.stream().mapToDouble(Double::doubleValue).toArray();
+        double[] nodeY = y.stream().mapToDouble(Double::doubleValue).toArray();
+        XYSeries nodeSeries = chart.addSeries("Узлы", nodeX, nodeY);
+
+        nodeSeries.setLineColor(Color.RED);
+        nodeSeries.setMarkerColor(Color.RED);
+        nodeSeries.setMarker(SeriesMarkers.CIRCLE);
+        nodeSeries.setLineStyle(SeriesLines.NONE);
 
         chart.getStyler().setXAxisDecimalPattern("#0.0");
 

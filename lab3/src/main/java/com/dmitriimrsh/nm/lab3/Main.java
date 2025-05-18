@@ -4,8 +4,11 @@ import com.dmitriimrsh.nm.lab3.interpolation.Lagrange;
 import com.dmitriimrsh.nm.lab3.interpolation.Newton;
 import com.dmitriimrsh.nm.lab3.interpolation.Solver;
 import com.dmitriimrsh.nm.lab3.interpolation.Spline;
+import com.dmitriimrsh.nm.lab3.lsm.LSMSolver;
 import com.dmitriimrsh.nm.lab3.util.Util;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -15,6 +18,7 @@ public class Main {
                 """
                 1 - Интерполяционные многочлены Лагранжа и Ньютона
                 2 - Сплайн-интерполяция
+                3 - Метод наименьших квадратов
                 """
         );
 
@@ -26,6 +30,7 @@ public class Main {
         switch (number) {
             case 1 -> task1();
             case 2 -> task2();
+            case 3 -> task3();
             default -> System.out.println("Такого номера задания нет");
         }
     }
@@ -124,6 +129,74 @@ public class Main {
         );
 
         spline.visualize();
+    }
+
+    private static void task3() {
+        System.out.print("\n");
+        System.out.println("Метод наименьших квадратов:");
+
+        LSMSolver lsmSolver = new LSMSolver(
+                Util.LSM.X,
+                Util.LSM.Y
+        );
+
+        System.out.print("Приближающий многочлен 1-ой степени: ");
+
+        List<Double> firstDegree = Arrays.stream(lsmSolver.getApproxPolynomial(1))
+                        .boxed().toList();
+
+        LSMSolver.print(firstDegree);
+
+        System.out.printf(
+                "Сумма квадратов ошибок (степень 1): %.4f\n",
+                LSMSolver.getSumOfSquaredErrors(
+                        firstDegree,
+                        Util.LSM.Y,
+                        Util.LSM.X
+                )
+        );
+
+        LSMSolver.visualize(firstDegree, Util.LSM.Y, Util.LSM.X);
+
+        System.out.print("\n");
+
+        System.out.print("Приближающий многочлен 2-ой степени: ");
+
+        List<Double> secondDegree = Arrays.stream(lsmSolver.getApproxPolynomial(2))
+                .boxed().toList();
+
+        LSMSolver.print(secondDegree);
+
+        System.out.printf(
+                "Сумма квадратов ошибок (степень 2): %.4f\n",
+                LSMSolver.getSumOfSquaredErrors(
+                        secondDegree,
+                        Util.LSM.Y,
+                        Util.LSM.X
+                )
+        );
+
+        LSMSolver.visualize(secondDegree, Util.LSM.Y, Util.LSM.X);
+
+        System.out.print("\n");
+
+        System.out.print("Приближающий многочлен 3-ей степени: ");
+
+        List<Double> thirdDegree = Arrays.stream(lsmSolver.getApproxPolynomial(3))
+                .boxed().toList();
+
+        LSMSolver.print(thirdDegree);
+
+        System.out.printf(
+                "Сумма квадратов ошибок (степень 3): %.4f\n",
+                LSMSolver.getSumOfSquaredErrors(
+                        thirdDegree,
+                        Util.LSM.Y,
+                        Util.LSM.X
+                )
+        );
+
+        LSMSolver.visualize(thirdDegree, Util.LSM.Y, Util.LSM.X);
     }
 
 }

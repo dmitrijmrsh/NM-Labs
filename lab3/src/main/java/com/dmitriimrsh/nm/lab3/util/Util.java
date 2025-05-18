@@ -77,4 +77,15 @@ public class Util {
     }
 
 
+    public static class LSM {
+
+        public static final List<Double> X_test = List.of(0., 1.7, 3.4, 5.1, 6.8, 8.5);
+
+        public static final List<Double> Y_test = List.of(0., 1.3038, 1.8439, 2.2583, 2.6077, 2.9155);
+
+        public static final List<Double> X = List.of(-5., -3., -1., 1., 3., 5.);
+
+        public static final List<Double> Y = List.of(-1.3734, -1.249, -0.7854, 0.7854, 1.249, 1.3734);
+    }
+
 }
