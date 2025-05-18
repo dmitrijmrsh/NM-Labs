@@ -50,7 +50,7 @@ public class Main {
         System.out.println("x = " + String.format("%.5f", iterationsAns));
 
         System.out.printf("Количество итераций: %s\n", iterationsLinearSolver.getIter());
-        System.out.printf("q: %s\n", iterationsLinearSolver.getQ());
+        System.out.printf("q = %s\n", iterationsLinearSolver.getQ());
 
         if (iterationsLinearSolver.check(iterationsAns)) {
             System.out.println("Проверка выполнена успешно\n");
@@ -91,7 +91,7 @@ public class Main {
         }
 
         System.out.printf("Количество итераций: %s\n", iterationsSystemSolver.getIter());
-        System.out.printf("q: %s\n", iterationsSystemSolver.getQ());
+        System.out.printf("q = %s\n", iterationsSystemSolver.getQ());
 
         if (iterationsSystemSolver.check(iterationsAns)) {
             System.out.println("Проверка выполнена успешно\n");

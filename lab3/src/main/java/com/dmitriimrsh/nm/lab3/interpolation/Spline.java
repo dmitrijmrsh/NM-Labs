@@ -1,7 +1,7 @@
 package com.dmitriimrsh.nm.lab3.interpolation;
 
 import com.dmitriimrsh.nm.lu.LUSolver;
-import org.apache.commons.math3.util.FastMath;
+import org.apache.commons.math3.analysis.differentiation.DerivativeStructure;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +17,8 @@ public class Spline {
     private List<Double> a;
     private List<Double> b;
     private List<Double> d;
+
+    private static final double eps = 0.000001;
 
     public Spline(final List<Double> x,
                   final List<Double> y) {
@@ -104,40 +106,96 @@ public class Spline {
     }
 
     public double value(final double arg) {
-        for (int i = 0; i < x.size(); ++i) {
-            if (arg == x.get(i)) {
-                return y.get(i);
+        for (int i = 0; i < x.size() - 1; ++i) {
+            if (arg >= x.get(i) && arg <= x.get(i + 1)) {
+                return polynomial(i, arg).getValue();
             }
         }
-
-        int index = 1;
-
-        while (arg < x.get(index)) {
-            ++index;
-            if (index > size - 1) {
-                throw new RuntimeException();
-            }
-        }
-
-        return polynomialValue(index, arg);
+        throw new RuntimeException("Аргумент не входит в область определения функции");
     }
 
-    private double polynomialValue(final int index,
-                                   final double arg) {
-        return a.get(index)
-                + b.get(index) * (arg - x.get(index))
-                + c.get(index) * FastMath.pow((arg - x.get(index)), 2)
-                + d.get(index) * FastMath.pow((arg - x.get(index)), 3);
+    private DerivativeStructure polynomial(final int index,
+                                           final double arg) {
+        DerivativeStructure x = new DerivativeStructure(1, 3, 0, arg);
+        DerivativeStructure difference = x.add(-this.x.get(index));
+        return difference.pow(3).multiply(this.d.get(index))
+                .add(difference.pow(2).multiply(this.c.get(index)))
+                .add(difference.multiply(this.b.get(index)))
+                .add(a.get(index));
     }
 
     public boolean check() {
-        for (int i = 0; i < x.size(); ++i) {
-            if (!y.get(i).equals(value(x.get(i)))) {
+        /*
+           Краевые случаи
+        */
+        if (x.isEmpty()) {
+            return true;
+        }
+
+        if (x.size() == 1) {
+            throw new RuntimeException("В непустом наборе узлов их кол-во должно быть 2 и более");
+        }
+
+        /*
+           Левый и правый крайние узлы
+        */
+        if (Math.abs(y.get(0) - value(x.get(0))) >= eps) {
+            return false;
+        }
+
+        if (Math.abs(y.get(y.size() - 1) - value(x.get(x.size() - 1))) >= eps) {
+            return false;
+        }
+
+        /*
+           Непрерывность сплайна в не краевых узлах,
+           равенство соответствующих значений функции и
+           сплайна
+        */
+        for (int i = 1; i < x.size() - 1; ++i) {
+            if (Math.abs(polynomial(i - 1, x.get(i)).getValue() - polynomial(i, x.get(i)).getValue()) >= eps) {
+                return false;
+            }
+            if (Math.abs(y.get(i) - value(x.get(i))) >= eps) {
                 return false;
             }
         }
 
-        return true;
+        /*
+           Непрерывность сплайна в не краевых узлах
+           по первой производной
+        */
+        for (int i = 1; i < x.size() - 1; ++i) {
+            if (
+                    Math.abs(polynomial(i - 1, x.get(i)).getPartialDerivative(1)
+                    - polynomial(i, x.get(i)).getPartialDerivative(1)) >= eps
+            ) {
+                return false;
+            }
+        }
+
+        /*
+           Непрерывность сплайна в не краевых узлах
+           по второй производной
+        */
+        for (int i = 1; i < x.size() - 1; ++i) {
+            if (
+                    Math.abs(polynomial(i - 1, x.get(i)).getPartialDerivative(2)
+                    - polynomial(i, x.get(i)).getPartialDerivative(2)) >= eps
+            ) {
+                return false;
+            }
+        }
+
+        /*
+           Вторые производные сплайнов в точках
+           x_0 и x_n равны нулю
+        */
+        if (Math.abs(polynomial(0, x.get(0)).getPartialDerivative(2)) >= eps) {
+            return false;
+        }
+
+        return !(Math.abs(polynomial(x.size() - 2, x.get(x.size() - 1)).getPartialDerivative(2)) >= eps);
     }
 
     public List<Double> getC() {
