@@ -188,7 +188,7 @@ public class Spline {
         }
 
         /*
-           Вторые производные сплайнов в точках
+           Вторые производные сплайнов в узлах
            x_0 и x_n равны нулю
         */
         if (Math.abs(polynomial(0, x.get(0)).getPartialDerivative(2)) >= eps) {

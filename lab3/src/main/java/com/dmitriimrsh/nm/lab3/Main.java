@@ -81,7 +81,7 @@ public class Main {
         System.out.print("\n");
         System.out.println("Сплайн-интерполяция:");
 
-        Spline spline = new Spline(Util.Spline.x, Util.Spline.y);
+        Spline spline = new Spline(Util.Spline.X, Util.Spline.Y);
 
         System.out.print("a: ");
         for (var a_i : spline.getA()) {
@@ -115,8 +115,8 @@ public class Main {
 
         System.out.printf(
                 "Значение (x = %.5f): %.5f",
-                Util.Spline.x_star,
-                spline.value(Util.Spline.x_star)
+                Util.Spline.X_star,
+                spline.value(Util.Spline.X_star)
         );
     }
 
